@@ -1,0 +1,112 @@
+# EPOC Enhanced Training Configuration
+project_name: "epoc-molecular-subtyping"
+experiment_id: "enhanced_v1"
+
+# Data Configuration
+data_path: "/data/epoc_molecular_data"
+manifest_file: "epoc_manifest.csv"
+
+# Model Configuration
+model_type: "enhanced"  # Options: enhanced, ensemble, state_of_the_art
+architecture: "ensemble"  # For state_of_the_art model
+
+# Enhanced Features
+use_multi_scale: true
+use_test_time_augmentation: true
+use_stain_normalization: true
+use_uncertainty_quantification: true
+use_quality_control: true
+
+# Training Configuration
+num_epochs: 100
+batch_size: 32
+learning_rate: 1e-4
+backbone_lr: 1e-5
+uncertainty_lr: 1e-4
+weight_decay: 0.01
+grad_clip: 1.0
+
+# Data Split
+val_split: 0.2
+test_split: 0.1
+
+# Augmentation
+augmentation_strength: 0.5
+use_mixup: true
+use_cutmix: true
+mixup_alpha: 0.2
+cutmix_alpha: 1.0
+
+# Preprocessing
+preprocessing:
+  patch_size: 256
+  overlap: 0.25
+  stain_normalization: "macenko"
+  quality_threshold: 0.8
+  tissue_threshold: 0.6
+
+# Scheduler Configuration
+scheduler_type: "cosine_annealing_warm_restarts"
+T_0: 10
+T_mult: 2
+
+# Loss Configuration
+task_weights:
+  molecular_subtype: 1.0
+  survival_prediction: 0.3
+  mutation_prediction: 0.2
+uncertainty_weight: 0.1
+
+# Multi-task Learning
+use_multi_task: true
+tasks:
+  - molecular_subtype
+  - survival_prediction
+  - mutation_prediction
+
+# Distributed Training
+world_size: 4
+backend: "nccl"
+
+# Hardware Configuration
+num_workers: 8
+pin_memory: true
+mixed_precision: true
+
+# Logging and Monitoring
+use_wandb: true
+log_interval: 100
+val_interval: 1
+save_interval: 10
+
+# Early Stopping
+patience: 20
+min_delta: 0.001
+
+# Checkpointing
+checkpoint_dir: "checkpoints"
+save_best_only: true
+load_checkpoint: null
+
+# Inference Configuration
+test_time_augmentation:
+  num_augmentations: 6
+  augmentation_types:
+    - horizontal_flip
+    - vertical_flip
+    - rotation_90
+    - rotation_180
+    - rotation_270
+    - identity
+
+multi_scale_inference:
+  scales: [0.8, 0.9, 1.0, 1.1, 1.2]
+  
+# Target Performance
+target_accuracy: 96.0
+expected_improvement: 8.0  # Percentage points
+
+# Resource Requirements
+min_gpu_memory: 24  # GB
+recommended_gpus: 4
+estimated_training_time: 48  # hours 
