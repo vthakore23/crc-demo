@@ -43,13 +43,12 @@ def main():
     try:
         from app.molecular_subtype_platform import (
             apply_molecular_theme,
-            display_molecular_hero,
+            display_molecular_landing,
             display_molecular_upload,
             display_molecular_demo,
             display_epoc_dashboard,
             display_molecular_history,
             display_molecular_performance,
-            display_molecular_landing,
             display_molecular_sidebar
         )
         

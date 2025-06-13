@@ -1,0 +1,32 @@
+streamlit>=1.28.0
+pandas>=1.5.0
+numpy>=1.21.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+plotly>=5.10.0
+opencv-python>=4.6.0
+scikit-learn>=1.1.0
+Pillow>=9.0.0
+tqdm>=4.64.0
+requests>=2.28.0
+scipy>=1.9.0
+
+# Deep learning
+torch>=1.12.0
+torchvision>=0.13.0
+timm>=0.6.7
+
+# Medical imaging
+SimpleITK>=2.1.0
+
+# Data science
+xgboost>=1.6.0
+lightgbm>=3.3.0
+
+# Utilities
+wget>=3.2
+psutil>=5.9.0
+
+# Development
+jupyter>=1.0.0
+ipykernel>=6.15.0 

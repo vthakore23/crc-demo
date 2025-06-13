@@ -1,0 +1,24 @@
+[theme]
+primaryColor = "#00d9ff"
+backgroundColor = "#0a0e27"
+secondaryBackgroundColor = "#151b3d"
+textColor = "#ffffff"
+font = "sans serif"
+
+[server]
+maxUploadSize = 200
+enableCORS = true
+enableXsrfProtection = true
+# Disable file watching in production to prevent inotify issues
+fileWatcherType = "none"
+# Set memory limits
+maxMessageSize = 200
+# Disable static file serving to prevent warnings
+enableStaticServing = false
+
+[browser]
+gatherUsageStats = false
+
+[runner]
+# Reduce magic behavior that might cause issues
+magicEnabled = false 

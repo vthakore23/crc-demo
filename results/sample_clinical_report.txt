@@ -1,0 +1,40 @@
+
+    MOLECULAR SUBTYPE PREDICTION REPORT
+    ==================================================
+    Patient ID: TEST_001
+    Analysis Date: 2025-06-10 18:13:26
+    
+    PREDICTION RESULTS:
+    Molecular Subtype: Immune
+    Confidence: 99.9%
+    Model: Hybrid PyRadiomics-Deep Learning
+    
+    SUBTYPE PROBABILITIES:
+Canonical: 0.000
+Immune: 0.999
+Stromal: 0.000
+    
+    FEATURE ANALYSIS:
+    Total Features Extracted: 32796
+    Features Used: 50
+    - Deep Learning Features: 32776
+    - Radiomic Features: 0
+    - Spatial Pattern Features: 20
+    
+    CLINICAL IMPLICATIONS (Immune):
+    - Excellent prognosis (64% 10-year survival)
+    - MSI-independent immune activation
+    - NRAS, CDK12, EBF1 mutations common
+    - Strong candidate for immunotherapy
+    - Oligometastatic pattern - consider curative local therapy
+    - With low clinical risk score: 94% survival
+        
+    
+    QUALITY METRICS:
+    Model combines handcrafted radiomic features with deep learning
+    for enhanced accuracy and clinical interpretability.
+    
+    NOTE: This prediction is for research purposes and should be 
+    validated with additional clinical data and expert pathologist review.
+    ==================================================
+    

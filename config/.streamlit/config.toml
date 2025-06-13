@@ -1,0 +1,41 @@
+[theme]
+# Primary color
+primaryColor = "#8b5cf6"
+
+# Background color for the main content area
+backgroundColor = "#0f1419"
+
+# Background color for sidebar
+secondaryBackgroundColor = "#1a1f2e"
+
+# Color used for almost all text
+textColor = "#ffffff"
+
+# Font family for all text in the app, except code blocks
+font = "sans serif"
+
+[server]
+# Max file size for uploads (in MB)
+maxUploadSize = 200
+
+# Max message size (in MB)
+maxMessageSize = 200
+
+# Enable CORS
+enableCORS = true
+
+# Enable XSRF protection
+enableXsrfProtection = true
+
+# Disable file watcher to prevent PyTorch conflicts
+fileWatcherType = "none"
+
+[browser]
+# Internet address where users should point their browsers to connect to the app
+serverAddress = "0.0.0.0"
+
+# Port where users should point their browsers to connect to the app
+serverPort = 8501
+
+# Automatically rerun script when the file is modified on disk
+gatherUsageStats = false 
