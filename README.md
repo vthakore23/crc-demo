@@ -67,7 +67,7 @@ pip install -r requirements.txt
 pip install timm>=0.9.0 einops>=0.7.0 albumentations>=1.3.0 staintools>=2.1.2
 
 # Run the application
-streamlit run app.py
+streamlit run src/app.py
 ```
 
 ## 🧬 Advanced Features
@@ -88,24 +88,29 @@ streamlit run app.py
 
 ```
 crc-molecular-predictor/
-├── 🧬 app/                               # Streamlit application
-│   ├── molecular_subtype_platform.py     # Main platform interface
-│   ├── epoc_explainable_dashboard.py     # EPOC data dashboard
-│   └── ... (multiple advanced modules)
-├── 🏗️ foundation_model/                  # Core model implementations
-│   ├── molecular_subtype_foundation.py   # Foundation architecture
-│   ├── wsi_processor.py                  # WSI handling
-│   └── clinical_inference.py             # Clinical integration
-├── 🎯 models/                            # Model weights
-│   ├── state_of_the_art_molecular.pth    # Ensemble weights
-│   └── ... (various model checkpoints)
-├── 📊 data/                              # Data directories
-│   ├── synthetic_patterns/               # Synthetic validation data
+├── 📱 src/                               # Source code
+│   └── app.py                            # Main Streamlit application
+├── 📚 docs/                              # Documentation
+│   ├── ENHANCEMENTS_SUMMARY.md          # Enhancement details
+│   ├── DEMO_FIX_SUMMARY.md              # Demo fixes
+│   └── ... (comprehensive documentation)
+├── 🚀 deployment/                        # Production deployment
+│   ├── cluster/                          # Cluster training scripts
+│   ├── scripts/                          # Deployment utilities
+│   └── docs/                             # Deployment documentation
+├── 🎯 models/                            # Model weights & architectures
+│   ├── foundation/                       # Foundation model files
+│   ├── enhanced_molecular_predictor.py   # Enhanced architecture
+│   └── state_of_the_art_molecular_classifier.py
+├── 📊 data/                              # Training & demo data
+│   ├── raw/                              # Raw training data (27GB)
+│   ├── synthetic_patterns/               # Synthetic validation
 │   └── demo_data/                        # Demo images
-├── 🔬 state_of_the_art_molecular_classifier.py  # SOTA ensemble
-├── 🧪 advanced_histopathology_augmentation.py   # Advanced augmentation
-├── 📋 STATE_OF_THE_ART_IMPROVEMENTS.md          # Technical roadmap
-└── app.py                                # Application entry point
+├── 🔬 scripts/                           # Training & utility scripts
+├── 🧪 tests/                             # Test suite
+├── 📈 accuracy_improvements/             # Enhancement modules
+├── 📋 requirements.txt                   # Python dependencies
+└── 📖 README.md                          # This file
 ```
 
 ## 🛠️ Technology Stack
