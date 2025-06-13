@@ -5,13 +5,17 @@ This script launches the main application from the src/ directory
 """
 
 import sys
+import os
 from pathlib import Path
 
 # Add src directory to Python path
 src_path = Path(__file__).parent / "src"
 sys.path.insert(0, str(src_path))
 
-# Import and run the main application
+# Change to src directory so relative imports work correctly
+os.chdir(src_path)
+
+# Import and execute the main app
 if __name__ == "__main__":
-    from app import main
-    main() 
+    # Import the app module which will execute when imported
+    import app 
