@@ -1,0 +1,37 @@
+
+    MOLECULAR SUBTYPE PREDICTION REPORT
+    ==================================================
+    Patient ID: TEST_001
+    Analysis Date: 2025-06-09 20:42:13
+    
+    PREDICTION RESULTS:
+    Molecular Subtype: SNF3 (Stromal)
+    Confidence: 98.2%
+    Model: Hybrid PyRadiomics-Deep Learning
+    
+    SUBTYPE PROBABILITIES:
+    SNF1 (Canonical): 0.009
+    SNF2 (Immune): 0.009  
+    SNF3 (Stromal): 0.982
+    
+    FEATURE ANALYSIS:
+    Total Features Extracted: 32789
+    Features Used: 50
+    - Deep Learning Features: 32776
+    - Radiomic Features: 0
+    - Spatial Pattern Features: 13
+    
+    CLINICAL IMPLICATIONS (SNF3 - Stromal):
+    - Poor prognosis (20% 10-year survival)
+    - Likely cetuximab resistance
+    - Aggressive systemic therapy recommended
+        
+    
+    QUALITY METRICS:
+    Model combines handcrafted radiomic features with deep learning
+    for enhanced accuracy and clinical interpretability.
+    
+    NOTE: This prediction is for research purposes and should be 
+    validated with additional clinical data and expert pathologist review.
+    ==================================================
+    

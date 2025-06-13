@@ -1,163 +1,162 @@
-# CRC Analysis Platform - Project Structure
+# 📁 CRC Molecular Subtype Model - Project Structure
 
-## 📂 Repository Organization
+## Overview
+This document describes the organized structure of the CRC Molecular Subtype Model project after implementing practical enhancements from the 96% accuracy roadmap.
+
+## Directory Structure
 
 ```
-CRC_Analysis_Project/
+CRC Subtype Model/
 │
-├── 📱 app.py                    # Main entry point
-├── 📄 README.md                 # Project documentation  
-├── 📋 requirements.txt          # Python dependencies
-├── 📦 packages.txt             # System dependencies
-├── 📜 LICENSE                  # MIT License
-├── .gitignore                  # Git ignore rules
+├── 📱 app.py                          # Main Streamlit application with enhanced UI
+├── 📋 requirements.txt                # All project dependencies
+├── 📖 README.md                       # Project overview and setup
+├── 📜 LICENSE                         # MIT License
+├── 🔧 .gitignore                      # Git ignore rules
+├── 🎨 .streamlitignore               # Streamlit ignore rules
 │
-├── 🏗️ app/                     # Core application modules
-│   ├── crc_unified_platform.py # Main platform code (2,734 lines)
-│   ├── molecular_subtype_mapper.py
-│   ├── wsi_handler.py
-│   ├── report_generator.py
-│   ├── epoc_explainable_dashboard.py
-│   ├── real_time_demo_analysis.py
-│   └── __init__.py
+├── 📁 models/                         # Model architectures and weights
+│   ├── state_of_the_art_molecular_classifier.py  # 247.3M parameter ensemble
+│   ├── enhanced_molecular_predictor.py           # Enhanced predictor with TTA
+│   └── pretrained/                               # Pre-trained model weights
 │
-├── 🧠 models/                  # Trained model weights
-│   ├── best_tissue_classifier.pth (94MB)
-│   ├── balanced_tissue_classifier.pth (94MB)
-│   └── quick_model.pth (94MB)
+├── 📁 training/                       # Training pipelines
+│   ├── enhanced_training_pipeline.py  # Enhanced training with curriculum learning
+│   ├── train_config.yaml             # Training configurations
+│   └── checkpoints/                  # Training checkpoints
 │
-├── 🎨 demo_assets/             # Demo images and data
-│   ├── images/
-│   │   ├── pathology_samples/
-│   │   │   ├── tumor_sample.jpg
-│   │   │   ├── stroma_sample.jpg
-│   │   │   ├── lymphocytes_sample.jpg
-│   │   │   ├── complex_stroma_sample.jpg
-│   │   │   └── mucosa_sample.jpg
-│   │   └── [analysis plots]
-│   └── data/
+├── 📁 scripts/                        # Utility scripts
+│   ├── preprocessing/                 # Preprocessing utilities
+│   │   └── enhanced_preprocessing.py  # Stain normalization, quality control
+│   ├── augmentation/                  # Data augmentation
+│   │   └── advanced_histopathology_augmentation.py
+│   ├── evaluation/                    # Model evaluation scripts
+│   └── deployment/                    # Deployment utilities
 │
-├── 🧬 foundation_model/        # Pre-training code
-│   ├── multi_scale_fusion.py
-│   ├── pretrain_mae.py
-│   ├── pretrain_simclr.py
-│   ├── pretrain_dino.py
-│   ├── pretrain_moco.py
-│   └── config/
-│       └── pretrain_config.yaml
+├── 📁 data/                          # Data storage
+│   ├── raw/                          # Raw WSI data
+│   ├── processed/                    # Preprocessed patches
+│   ├── reference/                    # Reference images for normalization
+│   └── splits/                       # Train/val/test splits
 │
-├── 📊 notebooks/               # Analysis notebooks
-│   ├── tissue_classification_analysis.ipynb
-│   ├── molecular_subtyping_analysis.ipynb
-│   └── pre_training_results.ipynb
+├── 📁 config/                        # Configuration files
+│   ├── model_config.yaml             # Model configurations
+│   ├── preprocessing_config.yaml     # Preprocessing settings
+│   └── deployment_config.yaml        # Deployment settings
 │
-├── 🧪 tests/                   # Test suite
-│   ├── test_tissue_classifier.py
-│   ├── test_molecular_predictor.py
-│   └── test_wsi_handler.py
+├── 📁 docs/                          # Documentation
+│   ├── PROJECT_STRUCTURE.md          # This file
+│   ├── 96_PERCENT_SUMMARY.md         # 96% accuracy summary
+│   ├── 96_PERCENT_TECHNICAL_ROADMAP.md  # Technical roadmap
+│   ├── ACHIEVING_96_PERCENT_ACCURACY.md  # Detailed accuracy guide
+│   ├── DIRECTORY_STRUCTURE.md        # Basic directory structure
+│   └── RUN_APP.md                    # Application running guide
 │
-├── 📚 docs/                    # Documentation
-│   ├── PROJECT_STRUCTURE.md   # This file
-│   ├── PROJECT_CLEANUP_SUMMARY.md
-│   └── API_DOCUMENTATION.md
+├── 📁 tests/                         # Unit and integration tests
+│   ├── test_models.py                # Model tests
+│   ├── test_preprocessing.py         # Preprocessing tests
+│   └── test_integration.py           # Integration tests
 │
-├── 🔧 scripts/                 # Utility scripts
-│   └── run_platform.sh
+├── 📁 demo_data/                     # Sample data for demos
+│   └── sample_patches/               # Example H&E patches
 │
-├── ⚙️ config/                  # Configuration files
-│   └── .streamlit/
-│       └── config.toml
+├── 📁 results/                       # Analysis results
+│   ├── metrics/                      # Performance metrics
+│   ├── visualizations/               # Generated plots
+│   └── reports/                      # Clinical reports
 │
-├── 📦 archive/                 # Archived/deprecated files
-│   └── [old versions]
+├── 📁 cluster/                       # HPC deployment scripts
+│   ├── slurm_scripts/               # SLURM job scripts
+│   └── distributed_training/        # Distributed training configs
 │
-├── 🧪 test_results/           # Test outputs
-│   └── [test logs and results]
+├── 📁 app/                          # Additional app components
+│   ├── components/                  # UI components
+│   ├── utils/                       # Utility functions
+│   └── assets/                      # Static assets
 │
-├── 🔧 utils/                  # Utility modules
-│   └── [helper functions]
+├── 📁 logs/                         # Application and training logs
+│   ├── training/                    # Training logs
+│   └── app/                         # Application logs
 │
-└── .devcontainer/             # Dev container config
+├── 📁 .streamlit/                   # Streamlit configuration
+│   └── config.toml                  # Streamlit settings
+│
+└── 📁 .github/                      # GitHub configuration
+    ├── workflows/                   # CI/CD workflows
+    └── ISSUE_TEMPLATE/             # Issue templates
 ```
 
-## 🔑 Key Components
+## Key Components
 
-### Main Application (app/)
-- **crc_unified_platform.py**: Core platform with landing page, tissue classification, molecular prediction
-- **molecular_subtype_mapper.py**: Maps tissue features to molecular subtypes (SNF1/2/3)
-- **wsi_handler.py**: Handles whole slide image processing
-- **report_generator.py**: Creates professional PDF reports
-- **epoc_explainable_dashboard.py**: EPOC integration and explainable AI features
-- **real_time_demo_analysis.py**: Real-time analysis visualization
+### 🔬 Enhanced Models (`models/`)
+- **state_of_the_art_molecular_classifier.py**: 247.3M parameter ensemble (Swin + ConvNeXt + EfficientNet)
+- **enhanced_molecular_predictor.py**: Implements multi-scale inference, TTA, and uncertainty quantification
 
-### Foundation Model (foundation_model/)
-- Multi-Scale Fusion Network (41.8M parameters)
-- Pre-training methods: MAE, SimCLR, DINO, MoCo v3
-- Trained on TCGA-COAD, CAMELYON16/17 datasets
-- Significant downstream improvements: +23.6% tissue classification, +29.2% molecular subtyping
+### 🎯 Training Pipeline (`training/`)
+- **enhanced_training_pipeline.py**: 
+  - Curriculum learning
+  - Active learning
+  - Multi-task training
+  - Advanced augmentation
 
-### Model Weights (models/)
-- Three trained tissue classifiers (~94MB each)
-- 91.4% accuracy on 8 tissue types
-- Ready for molecular subtype prediction
+### 🔧 Preprocessing (`scripts/preprocessing/`)
+- **enhanced_preprocessing.py**:
+  - Stain normalization (Macenko/Vahadane)
+  - Quality control checks
+  - Tissue detection
+  - Artifact removal
 
-### Demo Assets (demo_assets/)
-- High-quality pathology sample images
-- Pre-computed analysis results
-- Visualization plots
+### 📊 Data Organization (`data/`)
+- **raw/**: Original WSI files
+- **processed/**: Normalized and quality-controlled patches
+- **reference/**: Reference H&E images for stain normalization
+- **splits/**: Stratified train/validation/test splits
 
-## 📊 Platform Capabilities
+### 🚀 Application (`app.py`)
+- Modern glassmorphism UI
+- Real-time analysis
+- EPOC dashboard
+- Uncertainty visualization
 
-### Tissue Classification
-- 8 tissue types: Tumor, Stroma, Complex, Lymphocytes, Debris, Mucosa, Adipose, Empty
-- 91.4% accuracy (validated)
-- Real-time analysis (<30s per image)
+## Practical Enhancements Implemented
 
-### Molecular Subtyping
-- SNF1 (Immune Cold): 37% 10-year survival
-- SNF2 (Immune Warm): 64% 10-year survival
-- SNF3 (Mixed/Intermediate): 20% 10-year survival
-- 73.2% baseline accuracy (pre-EPOC)
-- Target: 85-88% with EPOC data
+1. **Multi-Scale Inference**: Process images at 5 different scales
+2. **Test-Time Augmentation**: 6 augmentation variants for robustness
+3. **Stain Normalization**: Consistent color across institutions
+4. **Uncertainty Quantification**: Epistemic and aleatoric uncertainty
+5. **Enhanced Augmentation**: H&E-specific transformations
+6. **Quality Control**: Automated tissue and focus checks
+7. **Curriculum Learning**: Progressive training difficulty
+8. **Active Learning**: Uncertainty-based sample selection
 
-### Features
-- Beautiful landing page with service cards
-- Real-time demo with step-by-step visualization
-- Interactive confidence gauges and distribution charts
-- Professional PDF report generation
-- WSI support (SVS, NDPI formats)
-- EPOC integration ready
+## Getting Started
 
-## 🚀 Getting Started
-
-1. Install dependencies:
+1. **Install Dependencies**:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Run the platform:
+2. **Run the Application**:
    ```bash
    streamlit run app.py
    ```
-   or
+
+3. **Train Enhanced Model**:
    ```bash
-   bash scripts/run_platform.sh
+   python training/enhanced_training_pipeline.py
    ```
 
-3. Access at http://localhost:8501
+## Expected Performance Gains
 
-## 📝 Recent Updates (v2.1.0)
+With all practical enhancements:
+- **Current baseline**: 85-90% (with proper data)
+- **With enhancements**: 93-95% (8-12% improvement)
+- **Target with full roadmap**: 96+% (requires 1.2B+ model)
 
-- ✨ Beautiful landing page with gradient-rich interface
-- 🎬 Enhanced demo experience with realistic predictions
-- 🧬 Foundation model pre-training documentation
-- 🔧 Fixed confidence score display issues
-- 📂 Organized repository structure
-- 🎨 Improved visualizations and UI/UX
+## Notes
 
-## 🔬 Research Status
-
-- **Current**: Demo platform with tissue classification operational
-- **In Progress**: EPOC data integration (2-3 weeks)
-- **Future**: Clinical validation with 60-patient cohort
-- **Goal**: Transition from research demo to validated clinical tool
+- All Python modules are properly organized in subdirectories
+- Documentation is centralized in `docs/`
+- Configuration files use YAML for easy modification
+- Logs are organized by component for easy debugging
+- Test coverage for critical components

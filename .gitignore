@@ -125,4 +125,16 @@ app.zip
 *.tar
 *.tar.gz
 *.rar
-*.7z 
+*.7z
+
+# Large files
+*.pth
+*.zip
+*.h5
+*.pkl
+*.pdf
+models/*.pth
+data/raw/*.zip
+data/raw/*.tar.gz
+data/processed/*.npy
+docs/*.pdf 

@@ -1845,7 +1845,7 @@ def display_molecular_results(results):
         predicted_subtype = results.get('subtype', 'Unknown')
         if 'SNF' in predicted_subtype:
             # Convert SNF notation to new terminology
-            predicted_subtype = 'stromal')
+            predicted_subtype = 'stromal'
         confidence = results.get('confidence', 0) * 100 if results.get('confidence', 0) <= 1 else results.get('confidence', 0)
         probabilities = results.get('probabilities_by_subtype', {})
         # Update keys in probabilities if they contain SNF
@@ -1857,7 +1857,7 @@ def display_molecular_results(results):
     else:
         predicted_subtype = results.get('predicted_subtype', results.get('subtype', 'Unknown'))
         if 'SNF' in predicted_subtype:
-            predicted_subtype = 'stromal')
+            predicted_subtype = 'stromal'
         confidence = results.get('confidence', 0)
         probabilities = {}
     
