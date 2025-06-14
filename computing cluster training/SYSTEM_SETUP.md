@@ -1,24 +1,51 @@
-# System Setup - Randi Cluster Configuration
+# System Setup - UChicago RCC Configuration
 
 ## Prerequisites
 
 ### Account Requirements
-- Active UChicago CRI account with Randi cluster access
-- Allocation on appropriate partition (GPU nodes)
+- Active UChicago RCC account with cluster access
+- Allocation on appropriate partition (CPU or GPU)
 - SSH key configured for cluster access
 
 ### Verify Cluster Access
+
+**For Midway2 (Primary HPC Cluster):**
+```bash
+ssh username@midway2.rcc.uchicago.edu
+```
+
+**For Randi (GPU Cluster):**
 ```bash
 ssh username@randi.cri.uchicago.edu
 ```
+
+## RCC Infrastructure Overview
+
+Based on the [UChicago RCC resources](https://rcc.uchicago.edu/resources/high-performance-computing), the available systems include:
+
+### Midway2 Cluster
+- **Total Resources**: 16,016+ cores across 572+ nodes
+- **CPU Types**: Intel Broadwell (28 cores @ 2.4 GHz) and Skylake (40 cores @ 2.4 GHz)
+- **Memory**: 64-96 GB per standard node, up to 1TB on large memory nodes
+- **Network**: InfiniBand FDR/EDR (up to 100Gbps) and 40Gbps GigE
+- **Storage**: 2.2+ PB total storage infrastructure
+
+### GPU Resources
+- **Midway2 GPU Nodes**: NVIDIA K80 accelerator cards (4 per node)
+- **Randi GPU Nodes**: NVIDIA A100 GPUs (if available)
+- **Integration**: Fully integrated with InfiniBand network
 
 ## Environment Setup
 
 ### 1. Load Required Modules
 
-The Randi cluster uses environment modules. Load the following:
+The RCC uses environment modules. Common modules include:
 
 ```bash
+# Check available modules
+module avail
+
+# Load common modules for deep learning
 module load cuda/11.8
 module load python/3.11
 module load gcc/11.2.0
@@ -27,8 +54,19 @@ module load openmpi/4.1.4
 
 ### 2. Create Project Directory
 
+**For Midway2:**
 ```bash
-# Navigate to your scratch space (recommended for large datasets)
+# Navigate to your scratch space
+cd /scratch/midway2/username
+
+# Create project directory
+mkdir crc_molecular_training
+cd crc_molecular_training
+```
+
+**For Randi:**
+```bash
+# Navigate to your scratch space
 cd /scratch/username
 
 # Create project directory
@@ -52,7 +90,7 @@ pip install --upgrade pip
 ### 4. Install Dependencies
 
 ```bash
-# Install PyTorch with CUDA support
+# Install PyTorch with CUDA support (if using GPU nodes)
 pip install torch==2.1.0 torchvision==0.16.0 --index-url https://download.pytorch.org/whl/cu118
 
 # Install additional requirements
@@ -61,10 +99,17 @@ pip install -r requirements.txt
 
 ## Storage Configuration
 
+### RCC Storage Options
+
+Based on RCC infrastructure:
+- **Home Directory**: Limited space (typically 50GB)
+- **Scratch Space**: High-performance temporary storage
+- **Project Storage**: Long-term storage (contact RCC for allocation)
+
 ### Recommended Directory Structure
 
 ```
-/scratch/username/crc_molecular_training/
+/scratch/[cluster]/username/crc_molecular_training/
 ├── data/                    # EPOC WSI data (10TB+)
 │   ├── raw/                # Original WSI files
 │   ├── processed/          # Preprocessed patches
@@ -75,31 +120,31 @@ pip install -r requirements.txt
 └── scripts/                # Training scripts
 ```
 
-### Storage Quotas
+## Hardware Specifications
 
-- **Home Directory**: 50GB (not suitable for training data)
-- **Scratch Space**: 100TB (use for training data and checkpoints)
-- **Project Space**: Contact CRI for allocation if needed
+### Midway2 Specifications
+- **CPU Nodes**: Intel Broadwell (28 cores) or Skylake (40 cores)
+- **Memory**: 64-96 GB standard, up to 1TB on large memory nodes
+- **GPU Nodes**: NVIDIA K80 accelerators (4 per node)
+- **Network**: InfiniBand FDR/EDR or 40Gbps GigE
 
-## GPU Node Specifications
-
-### Available GPU Nodes on Randi
-- **5 GPU nodes**: 8x NVIDIA A100 (40GB) per node
-- **1 SXM node**: 8x NVIDIA A100 (80GB) connected via NVSwitch
-- **Total GPU Memory**: 320GB (40GB nodes) or 640GB (80GB node)
+### Randi Specifications (if available)
+- **GPU Nodes**: NVIDIA A100 GPUs
+- **Memory**: High-memory configurations available
+- **Network**: InfiniBand for high-performance communication
 
 ### Recommended Configuration
-- **Training**: Use 4-8 A100 GPUs across 1-2 nodes
-- **Memory**: 512GB RAM per node minimum
-- **Storage**: NVMe scratch space for data pipeline
+- **For CPU Training**: Midway2 Skylake nodes (40 cores, 96GB RAM)
+- **For GPU Training**: GPU nodes with K80 or A100 accelerators
+- **For Data Processing**: Large memory nodes (up to 1TB RAM)
 
 ## Network Configuration
 
 ### InfiniBand Setup
-Randi uses InfiniBand HDR100 (100 Gbps) for inter-node communication:
+RCC uses InfiniBand for high-performance interconnect:
 
 ```bash
-# Verify InfiniBand status
+# Verify InfiniBand status (if available)
 ibstat
 
 # Test bandwidth (if needed)
@@ -108,36 +153,44 @@ ib_write_bw
 
 ## SLURM Configuration
 
-### Partition Information
+### Check Available Partitions
 ```bash
 # View available partitions
 sinfo
 
-# Check GPU availability
+# Check specific partition details
 sinfo -p gpu --format="%.15N %.6D %.6t %.15C %.8z %.6m %.8d %.6w %.8f %20E"
+sinfo -p broadwl --format="%.15N %.6D %.6t %.15C %.8z %.6m %.8d %.6w %.8f %20E"
 ```
 
-### Resource Limits
-- **Max Job Time**: 7 days
-- **Max GPUs per Job**: 8 GPUs
-- **Max Nodes per Job**: 2 nodes (for multi-node training)
+### Common Partitions
+- **broadwl**: Intel Broadwell nodes (28 cores)
+- **skylake**: Intel Skylake nodes (40 cores)
+- **gpu**: GPU-enabled nodes
+- **bigmem**: Large memory nodes (up to 1TB)
 
 ## Validation Tests
 
-### 1. CUDA Availability
+### 1. System Information
+```bash
+# Check CPU information
+lscpu
+
+# Check memory
+free -h
+
+# Check available modules
+module avail | grep -E "(cuda|python|gcc)"
+```
+
+### 2. CUDA Availability (GPU nodes)
 ```bash
 python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}'); print(f'GPU count: {torch.cuda.device_count()}')"
 ```
 
-### 2. GPU Memory Test
+### 3. GPU Information (if available)
 ```bash
 nvidia-smi
-```
-
-### 3. InfiniBand Test
-```bash
-# Test inter-node communication (if using multiple nodes)
-mpirun -np 2 --hostfile hostfile python -c "import torch.distributed as dist; dist.init_process_group('nccl')"
 ```
 
 ## Common Module Commands
@@ -164,10 +217,13 @@ module restore crc_training
 Add to your `~/.bashrc` or job script:
 
 ```bash
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+# For GPU training
+export CUDA_VISIBLE_DEVICES=0,1,2,3
 export OMP_NUM_THREADS=8
 export NCCL_DEBUG=INFO
-export PYTHONPATH=/scratch/username/crc_molecular_training:$PYTHONPATH
+
+# Project path
+export PYTHONPATH=/scratch/[cluster]/username/crc_molecular_training:$PYTHONPATH
 ```
 
 ## Troubleshooting
@@ -179,7 +235,7 @@ module purge
 module load cuda/11.8 python/3.11 gcc/11.2.0
 ```
 
-### CUDA Issues
+### CUDA Issues (GPU nodes)
 ```bash
 # Check CUDA installation
 nvcc --version
@@ -189,16 +245,37 @@ which nvcc
 ### Storage Issues
 ```bash
 # Check disk usage
-df -h /scratch/username
+df -h /scratch/[cluster]/username
 quota -u username
 ```
+
+### Network Connectivity
+```bash
+# Test cluster connectivity
+ping midway2.rcc.uchicago.edu
+ping randi.cri.uchicago.edu
+```
+
+## Getting Help
+
+### RCC Support Resources
+- **Email**: help@rcc.uchicago.edu
+- **Phone**: (773) 795-2667
+- **Walk-in**: Regenstein Library, Suite 216
+- **User Guide**: Available on RCC website
+
+### Account and Allocation
+- **Request Account**: Visit RCC website
+- **Storage Allocation**: Contact RCC for additional storage
+- **Compute Allocation**: Review allocation policies on RCC website
 
 ## Next Steps
 
 1. Verify all components are working with `scripts/validate_setup.sh`
-2. Proceed to `TRAINING_GUIDE.md` for training procedures
-3. Configure data paths in `config/randi_training_config.yaml`
+2. Choose appropriate cluster (Midway2 vs Randi) based on requirements
+3. Proceed to `TRAINING_GUIDE.md` for training procedures
+4. Configure data paths in `config/rcc_training_config.yaml`
 
 ---
 
-**Support**: For Randi-specific issues, contact help@rcc.uchicago.edu 
+**Support**: For RCC-specific issues, contact help@rcc.uchicago.edu or visit the [RCC website](https://rcc.uchicago.edu/resources/high-performance-computing) 
