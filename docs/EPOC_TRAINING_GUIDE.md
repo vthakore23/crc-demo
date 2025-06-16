@@ -8,7 +8,7 @@ This guide explains how to train the CRC molecular subtype classification model 
 
 ### 1. Data Requirements
 - **WSI Images**: Whole Slide Images from EPOC cohort patients
-- **Molecular Labels**: Ground truth molecular subtypes (CMS1-4 or canonical-3)
+- **Molecular Labels**: Ground truth molecular subtypes (canonical, immune, stromal)
 - **Clinical Data**: Treatment outcomes, survival data (optional but valuable)
 
 ### 2. Computing Requirements
@@ -36,8 +36,8 @@ python scripts/extract_wsi_tiles.py \
 The manifest CSV should contain:
 ```csv
 patient_id,molecular_subtype,wsi_path,treatment_arm,pfs_months,os_months
-EPOC_001,CMS1,patient_001/,chemo,12.3,24.5
-EPOC_002,CMS2,patient_002/,chemo+cetuximab,18.7,36.2
+EPOC_001,canonical,patient_001/,chemo,12.3,24.5
+EPOC_002,immune,patient_002/,chemo+cetuximab,18.7,36.2
 ...
 ```
 
@@ -283,7 +283,7 @@ After training, integrate the model:
    # In app/config.py
    MOLECULAR_MODEL_PATH = "models/epoc_trained_model.pth"
    MODEL_TRAINED_ON = "EPOC Cohort"
-   MOLECULAR_CLASSES = ["CMS1", "CMS2", "CMS3", "CMS4"]
+   MOLECULAR_CLASSES = ["canonical", "immune", "stromal"]
    ```
 
 3. **Deploy Updated Platform**:

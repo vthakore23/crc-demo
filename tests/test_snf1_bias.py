@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test script to investigate SNF1 bias in molecular subtype predictions
+Test script to investigate canonical bias in molecular subtype predictions
 """
 
 import torch
@@ -46,7 +46,7 @@ def create_test_images():
     """Create synthetic test images with different tissue patterns"""
     test_images = {}
     
-    # SNF2-like pattern (immune-rich)
+    # Immune-like pattern (immune-rich)
     img = np.zeros((224, 224, 3), dtype=np.uint8)
     # Purple/lymphocytes (many small dots)
     for _ in range(500):
@@ -56,9 +56,9 @@ def create_test_images():
     for _ in range(5):
         x, y = np.random.randint(30, 194, 2)
         cv2.circle(img, (x, y), 20, (255, 192, 203), -1)
-    test_images['SNF2_immune'] = Image.fromarray(img)
+    test_images['immune_pattern'] = Image.fromarray(img)
     
-    # SNF3-like pattern (stromal-rich)
+    # Stromal-like pattern (stromal-rich)
     img = np.zeros((224, 224, 3), dtype=np.uint8)
     # Stromal patterns (fibrous, pink)
     for i in range(0, 224, 10):
@@ -67,15 +67,15 @@ def create_test_images():
     for _ in range(3):
         x, y = np.random.randint(40, 184, 2)
         cv2.circle(img, (x, y), 25, (255, 105, 180), -1)
-    test_images['SNF3_stromal'] = Image.fromarray(img)
+    test_images['stromal_pattern'] = Image.fromarray(img)
     
-    # SNF1-like pattern (tumor-rich, organized)
+    # Canonical-like pattern (tumor-rich, organized)
     img = np.zeros((224, 224, 3), dtype=np.uint8)
     # Large tumor regions with clear borders
     cv2.rectangle(img, (30, 30), (194, 194), (255, 192, 203), -1)
     # Clean edges
     cv2.rectangle(img, (30, 30), (194, 194), (255, 0, 0), 2)
-    test_images['SNF1_canonical'] = Image.fromarray(img)
+    test_images['canonical_pattern'] = Image.fromarray(img)
     
     return test_images
 
@@ -94,9 +94,9 @@ def analyze_predictions(mapper, transform, test_images):
             'image': name,
             'predicted': pred_results['subtype'],
             'confidence': pred_results['confidence'],
-            'snf1_prob': pred_results['probabilities'][0],
-            'snf2_prob': pred_results['probabilities'][1],
-            'snf3_prob': pred_results['probabilities'][2],
+            'canonical_prob': pred_results['probabilities'][0],
+            'immune_prob': pred_results['probabilities'][1],
+            'stromal_prob': pred_results['probabilities'][2],
             'tumor_pct': pred_results['tissue_composition']['tumor'],
             'stroma_pct': pred_results['tissue_composition']['stroma'],
             'lymph_pct': pred_results['tissue_composition']['lymphocytes'],
@@ -109,7 +109,7 @@ def analyze_predictions(mapper, transform, test_images):
         # Print detailed info
         print(f"  Predicted: {result['predicted']}")
         print(f"  Confidence: {result['confidence']:.1f}%")
-        print(f"  Probabilities: SNF1={result['snf1_prob']:.3f}, SNF2={result['snf2_prob']:.3f}, SNF3={result['snf3_prob']:.3f}")
+        print(f"  Probabilities: canonical={result['canonical_prob']:.3f}, immune={result['immune_prob']:.3f}, stromal={result['stromal_prob']:.3f}")
         print(f"  Tissue comp: Tumor={result['tumor_pct']:.2f}, Stroma={result['stroma_pct']:.2f}, Lymph={result['lymph_pct']:.2f}")
         print(f"  Confidence reasons: {result['confidence_reasons']}")
     
@@ -156,7 +156,7 @@ def test_real_images():
 
 def main():
     print("=" * 80)
-    print("TESTING FOR SNF1 BIAS IN MOLECULAR PREDICTIONS")
+    print("TESTING FOR CANONICAL BIAS IN MOLECULAR PREDICTIONS")
     print("=" * 80)
     
     # Load model
@@ -180,16 +180,16 @@ def main():
     print(df_results.to_string())
     
     # Check for bias
-    snf1_count = (df_results['predicted'].str.contains('SNF1')).sum()
+    canonical_count = (df_results['predicted'].str.contains('canonical')).sum()
     total_count = len(df_results)
     
-    print(f"\nSNF1 predictions: {snf1_count}/{total_count} ({snf1_count/total_count*100:.0f}%)")
+    print(f"\ncanonical predictions: {canonical_count}/{total_count} ({canonical_count/total_count*100:.0f}%)")
     
-    if snf1_count == total_count:
-        print("\n⚠️ WARNING: All predictions are SNF1! There may be a bias.")
+    if canonical_count == total_count:
+        print("\n⚠️ WARNING: All predictions are canonical! There may be a bias.")
         print("\nPossible causes:")
         print("1. The tissue classifier may be biased toward tumor classification")
-        print("2. The scoring weights may favor SNF1 characteristics")
+        print("2. The scoring weights may favor canonical characteristics")
         print("3. The spatial pattern detection may not be working properly")
     
     # Test real images
@@ -215,7 +215,7 @@ if __name__ == "__main__":
         # Fallback implementation without cv2
         def create_test_images():
             test_images = {}
-            for pattern in ['SNF1_canonical', 'SNF2_immune', 'SNF3_stromal']:
+            for pattern in ['canonical_pattern', 'immune_pattern', 'stromal_pattern']:
                 # Create simple colored image
                 img = np.ones((224, 224, 3), dtype=np.uint8) * 128
                 test_images[pattern] = Image.fromarray(img)

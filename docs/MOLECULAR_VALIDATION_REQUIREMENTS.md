@@ -19,7 +19,7 @@
 ### 1. Molecular Profiling Data
 For each histopathology sample, we need:
 - **RNA sequencing data** for gene expression profiles
-- **CMS classification** (CMS1-4 subtypes)
+- **CRC molecular subtypes** (canonical, immune, stromal)
 - **Key mutations**: BRAF, KRAS, MSI status
 - **Methylation status**: CIMP status
 

@@ -1,0 +1,397 @@
+# EPOC Trial CRC Molecular Subtype Classification Training Configuration
+# Enterprise-grade distributed training for 500+ gigapixel WSIs
+
+# Experiment metadata
+experiment:
+  name: "epoc_crc_subtype_v2.0"
+  description: "EPOC Trial validation with distributed training on liver metastasis WSIs"
+  version: "2.0.0"
+  tags: ["epoc", "crc", "liver_metastasis", "molecular_subtype"]
+  
+# Model configuration
+model:
+  name: "hierarchical_attention_mil"
+  architecture: "swin_transformer_v2"  # swin_transformer_v2, convnext_v2, efficientnet_v2
+  
+  # Core model parameters
+  num_classes: 3  # canonical, immune, stromal
+  input_size: [224, 224]
+  patch_size: 256
+  
+  # Multi-scale configuration
+  magnifications: [10, 20, 40]  # 10x, 20x, 40x magnifications
+  scales: [0.5, 1.0, 2.0]      # Relative scaling factors
+  
+  # Attention mechanism
+  attention:
+    type: "hierarchical"  # hierarchical, gated, transformer
+    num_heads: 8
+    dropout: 0.1
+    dim_feedforward: 2048
+    
+  # Feature extraction
+  feature_dim: 512
+  hidden_dims: [1024, 512, 256]
+  dropout_rate: 0.3
+  
+  # Uncertainty quantification
+  uncertainty:
+    enabled: true
+    method: "evidential"  # evidential, bayesian, ensemble
+    temperature_scaling: true
+    
+  # Multi-task learning
+  auxiliary_tasks:
+    tissue_segmentation: true
+    stain_prediction: true
+    artifact_detection: true
+
+# Training configuration
+training:
+  # Basic parameters
+  epochs: 150
+  batch_size: 24  # Per GPU batch size
+  learning_rate: 3e-4
+  weight_decay: 1e-4
+  gradient_clip_val: 1.0
+  accumulation_steps: 2
+  
+  # Learning rate schedule
+  scheduler:
+    type: "cosine_warmup"
+    warmup_epochs: 10
+    warmup_factor: 0.1
+    eta_min: 1e-7
+    
+  # Optimization
+  optimizer:
+    type: "adamw"
+    eps: 1e-8
+    betas: [0.9, 0.999]
+    amsgrad: false
+    
+  # Regularization
+  label_smoothing: 0.1
+  mixup_alpha: 0.2
+  cutmix_alpha: 1.0
+  dropout_schedule: "linear"  # linear, exponential, constant
+  
+  # Early stopping
+  early_stopping:
+    patience: 20
+    min_delta: 0.001
+    monitor: "val_f1_macro"
+    mode: "max"
+
+# Distributed training configuration  
+distributed:
+  # Backend configuration
+  backend: "nccl"  # nccl for GPU, gloo for CPU
+  find_unused_parameters: false
+  sync_batchnorm: true
+  gradient_as_bucket_view: true
+  static_graph: true
+  
+  # Communication optimization
+  bucket_cap_mb: 25
+  broadcast_buffers: true
+  ddp_timeout: 3600  # 1 hour timeout
+  
+  # Mixed precision training
+  amp:
+    enabled: true
+    dtype: "float16"  # float16, bfloat16
+    init_scale: 65536.0
+    growth_factor: 2.0
+    backoff_factor: 0.5
+    growth_interval: 2000
+    
+  # Gradient compression (optional)
+  gradient_compression:
+    enabled: false
+    algorithm: "powersgd"  # powersgd, signsgd, fedprox
+    compression_ratio: 0.25
+
+# WSI Dataset configuration
+dataset:
+  # Data paths
+  data_root: "/shared/data/epoc_wsi"
+  train_manifest: "train_manifest.json"
+  val_manifest: "val_manifest.json"
+  test_manifest: "test_manifest.json"
+  
+  # WSI formats supported
+  wsi_formats: ["svs", "ndpi", "tiff", "mrxs", "vms"]
+  
+  # Patch extraction
+  patch_extraction:
+    tile_size: 512
+    overlap: 64
+    magnification: 20  # Base magnification
+    tissue_threshold: 0.15
+    background_threshold: 0.85
+    blur_threshold: 50
+    
+  # Multi-scale patches
+  multi_scale:
+    enabled: true
+    scales: [10, 20, 40]  # Magnifications
+    patch_sizes: [256, 512, 1024]
+    
+  # Stain normalization
+  stain_normalization:
+    enabled: true
+    method: "vahadane"  # macenko, vahadane, reinhard
+    reference_image: "reference_he.png"
+    
+  # Data augmentation
+  augmentation:
+    # Geometric augmentations
+    rotation: [-30, 30]
+    horizontal_flip: 0.5
+    vertical_flip: 0.5
+    elastic_transform: 0.3
+    
+    # Color augmentations
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.1
+    
+    # Stain augmentation
+    stain_augmentation:
+      enabled: true
+      sigma1: 0.2
+      sigma2: 0.2
+      
+    # Advanced augmentations
+    gaussian_noise: 0.1
+    motion_blur: 0.15
+    gaussian_blur: 0.1
+    
+    # Artifact simulation
+    artifact_simulation:
+      enabled: true
+      bubble_probability: 0.05
+      fold_probability: 0.03
+      pen_marking_probability: 0.02
+
+# Data loading configuration
+data_loading:
+  num_workers: 12
+  pin_memory: true
+  persistent_workers: true
+  prefetch_factor: 4
+  drop_last: true
+  
+  # Memory optimization
+  use_lmdb: true
+  lmdb_map_size: 1099511627776  # 1TB
+  cache_size: 10000  # Number of patches to cache
+  
+  # Distributed sampling
+  sampler:
+    type: "distributed"
+    shuffle: true
+    drop_last: true
+    seed: 42
+    
+  # Class balancing
+  class_balancing:
+    enabled: true
+    strategy: "weighted_random"  # weighted_random, focal_loss, class_balanced
+    weights: [1.0, 1.5, 1.2]  # For canonical, immune, stromal
+
+# Validation configuration
+validation:
+  frequency: 1  # Validate every N epochs
+  batch_size: 32
+  
+  # Metrics to track
+  metrics:
+    - "accuracy"
+    - "f1_macro"
+    - "f1_per_class"
+    - "precision_macro"
+    - "recall_macro"
+    - "roc_auc_macro"
+    - "confusion_matrix"
+    - "uncertainty_quality"
+    
+  # Cross-validation for EPOC
+  cross_validation:
+    enabled: true
+    folds: 5
+    stratified: true
+    
+  # Institution-wise validation
+  institution_validation:
+    enabled: true
+    institutions: ["site_a", "site_b", "site_c", "site_d"]
+
+# Monitoring and logging
+monitoring:
+  # Weights & Biases
+  wandb:
+    enabled: true
+    project: "epoc-crc-subtype"
+    entity: "medical-ai-lab"
+    tags: ["distributed", "epoc", "production"]
+    
+  # TensorBoard
+  tensorboard:
+    enabled: true
+    log_dir: "/shared/logs/tensorboard"
+    
+  # System monitoring
+  system_monitoring:
+    enabled: true
+    log_interval: 60  # seconds
+    
+    # GPU monitoring
+    gpu_monitoring:
+      memory_usage: true
+      utilization: true
+      temperature: true
+      
+    # Network monitoring
+    network_monitoring:
+      bandwidth: true
+      latency: true
+      
+  # Training metrics
+  logging:
+    log_every_n_steps: 50
+    save_every_n_epochs: 5
+    
+  # Profiling
+  profiler:
+    enabled: false  # Enable for debugging
+    schedule:
+      wait: 1
+      warmup: 1
+      active: 3
+      repeat: 2
+
+# Checkpointing
+checkpointing:
+  # Checkpoint frequency
+  save_frequency: 5  # Save every N epochs
+  emergency_save_frequency: 1000  # Save every N batches
+  
+  # Checkpoint management
+  keep_last_n: 10
+  keep_best_n: 3
+  
+  # Fault tolerance
+  fault_tolerance:
+    max_retries: 3
+    retry_delay: 60  # seconds
+    health_check_interval: 100  # batches
+    
+  # Compression
+  compression:
+    enabled: true
+    algorithm: "gzip"
+    level: 6
+
+# Paths and directories
+paths:
+  # Output directories
+  output_dir: "/shared/results/epoc_training"
+  checkpoint_dir: "/shared/checkpoints/epoc_training"
+  log_dir: "/shared/logs/epoc_training"
+  
+  # Cache directories
+  cache_dir: "/scratch/cache/epoc_training"
+  temp_dir: "/tmp/epoc_training"
+  
+  # Pre-trained models
+  pretrained_weights: "/shared/pretrained/swin_transformer_v2_base.pth"
+
+# Hardware optimization
+hardware:
+  # GPU configuration
+  gpu:
+    memory_fraction: 0.95
+    allow_growth: true
+    mixed_precision: true
+    
+  # CPU configuration
+  cpu:
+    num_threads: 16
+    affinity: true
+    
+  # Memory management
+  memory:
+    pin_memory: true
+    non_blocking: true
+    shared_memory_size: "32G"
+
+# Production settings
+production:
+  # Model versioning
+  model_versioning:
+    enabled: true
+    registry: "mlflow"
+    
+  # Quality assurance
+  quality_assurance:
+    validation_threshold: 0.85  # Minimum F1 score
+    uncertainty_threshold: 0.3   # Maximum acceptable uncertainty
+    
+  # Compliance
+  compliance:
+    gdpr_compliant: true
+    hipaa_compliant: true
+    audit_logging: true
+    
+  # Deployment readiness
+  deployment:
+    onnx_export: true
+    tensorrt_optimization: true
+    quantization: "int8"  # int8, fp16
+
+# EPOC-specific settings
+epoc:
+  # Trial parameters
+  trial:
+    name: "EPOC"
+    phase: "validation"
+    sites: ["mayo", "mdanderson", "johns_hopkins", "stanford"]
+    
+  # Clinical validation
+  clinical_validation:
+    concordance_threshold: 0.8
+    pathologist_agreement: true
+    scanner_normalization: true
+    
+  # Biomarker correlation
+  biomarker_correlation:
+    rna_seq_validation: true
+    ihc_correlation: true
+    mutation_status: true
+    
+  # Regulatory compliance
+  regulatory:
+    fda_submission_ready: true
+    ce_marking_ready: true
+    documentation_level: "clinical_trial"
+
+# Performance optimization
+performance:
+  # Compilation
+  torch_compile:
+    enabled: true
+    mode: "reduce-overhead"  # default, reduce-overhead, max-autotune
+    
+  # Graph optimization
+  graph_optimization:
+    enabled: true
+    passes: ["constant_folding", "dead_code_elimination", "common_subexpression_elimination"]
+    
+  # Memory optimization
+  memory_optimization:
+    gradient_checkpointing: true
+    activation_checkpointing: true
+    cpu_offload: false 

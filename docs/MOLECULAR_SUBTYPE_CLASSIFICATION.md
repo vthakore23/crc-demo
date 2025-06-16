@@ -1,8 +1,8 @@
 # 🧬 Molecular Subtype Classification - Official Specification
 
-## **PROJECT SCOPE: SNF SUBTYPES ONLY**
+## **PROJECT SCOPE: THREE-CLASS MOLECULAR SUBTYPES**
 
-This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion) molecular subtypes**:
+This CRC Analysis Platform **exclusively predicts three CRC molecular subtypes**:
 
 ### **✅ PREDICTED SUBTYPES (ONLY THESE THREE)**
 
@@ -14,7 +14,7 @@ This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion
 
 ### **❌ NOT PREDICTED (EXPLICITLY EXCLUDED)**
 
-- **CMS1, CMS2, CMS3, CMS4** (Consensus Molecular Subtypes) - **NOT USED IN THIS PROJECT**
+- **CMS1, CMS2, CMS3, CMS4** (Consensus Molecular Subtypes) - NOT USED IN THIS PROJECT
 - Any other molecular classification systems
 - Gene expression-based subtypes requiring molecular data
 
@@ -34,10 +34,10 @@ This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion
 
 3. **Streamlit Interface**: `app/crc_unified_platform.py`
    - Displays: canonical, immune, stromal results only
-   - Clinical recommendations based on SNF subtypes
+   - Clinical recommendations based on molecular subtypes
    - Treatment guidance: Immunotherapy (immune), Anti-angiogenic (stromal), Combination (canonical)
 
-## **PERFORMANCE METRICS (SNF CLASSIFICATION)**
+## **PERFORMANCE METRICS (MOLECULAR SUBTYPE CLASSIFICATION)**
 
 ### **Current Accuracy (Pre-EPOC)**
 
@@ -111,15 +111,15 @@ This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion
 ### **Data Requirements**
 
 - H&E whole slide images (WSI)
-- Ground truth SNF molecular subtype annotations
+- Ground truth molecular subtype annotations
 - Clinical outcomes (survival, treatment response)
 - Quality control metrics
 
 ### **Expected Workflow**
 
 1. **Image Preprocessing**: WSI → tissue patches → feature extraction
-2. **SNF Classification**: Deep learning + PyRadiomics → canonical/2/3 prediction
-3. **Clinical Integration**: Treatment recommendations based on SNF subtype
+2. **Molecular Classification**: Deep learning + PyRadiomics → canonical/immune/stromal prediction
+3. **Clinical Integration**: Treatment recommendations based on molecular subtype
 4. **Validation**: Compare predictions with molecular gold standard
 
 ## **DEPLOYMENT STATUS**
@@ -142,16 +142,16 @@ This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion
 ### **File Status Verification**
 
 - ✅ `app/crc_unified_platform.py`: Uses canonical/2/3 only
-- ✅ `app/molecular_subtype_mapper.py`: SNF classification
-- ✅ `app/hybrid_radiomics_classifier.py`: SNF subtypes
-- ✅ `scripts/train_hybrid_classifier.py`: SNF training data
-- ✅ Documentation updated to reflect SNF focus
+- ✅ `app/molecular_subtype_mapper.py`: Molecular subtype classification
+- ✅ `app/hybrid_radiomics_classifier.py`: Molecular subtypes
+- ✅ `scripts/train_hybrid_classifier.py`: Molecular subtype training data
+- ✅ Documentation updated to reflect molecular subtype focus
 
 ### **Legacy References Cleaned**
 
 - ❌ Removed CMS references from documentation
-- ❌ Updated backup files to use SNF subtypes
-- ❌ Eliminated confusion between CMS and SNF systems
+- ❌ Updated backup files to use canonical/immune/stromal subtypes
+- ❌ Eliminated confusion between CMS and canonical/immune/stromal systems
 
 ---
 
@@ -165,4 +165,4 @@ This CRC Analysis Platform **exclusively predicts SNF (Similarity Network Fusion
 
 **Any references to CMS1, CMS2, CMS3, or CMS4 subtypes are outdated and have been removed.**
 
-The system is specifically designed for **SNF molecular subtype classification** based on histopathological image analysis, with clinical recommendations tailored to SNF biology and treatment implications. 
+The system is specifically designed for **molecular subtype classification** based on histopathological image analysis, with clinical recommendations tailored to subtype biology and treatment implications. 

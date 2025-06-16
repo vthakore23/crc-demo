@@ -142,9 +142,9 @@ def test_revolutionary_balance():
             predictions[prediction] += 1
             confidences.append(confidence)
             all_probabilities.append([
-                result['probabilities']['SNF1'],
-                result['probabilities']['SNF2'],
-                result['probabilities']['SNF3']
+                        result['probabilities']['canonical'],
+        result['probabilities']['immune'],
+        result['probabilities']['stromal']
             ])
             
             print(f"  {pattern_name:>15} #{i+1}: {prediction} ({confidence:.1f}%)")
@@ -157,7 +157,7 @@ def test_revolutionary_balance():
     # Distribution of predictions
     print("\nPrediction Distribution:")
     total = sum(predictions.values())
-    for subtype in ['SNF1 (Canonical)', 'SNF2 (Immune)', 'SNF3 (Stromal)']:
+    for subtype in ['canonical', 'immune', 'stromal']:
         count = predictions[subtype]
         percentage = (count / total) * 100
         print(f"  {subtype}: {count}/{total} ({percentage:.1f}%)")
@@ -186,9 +186,9 @@ def test_revolutionary_balance():
     # Probability statistics
     all_probabilities = np.array(all_probabilities)
     print(f"\nAverage Probabilities:")
-    print(f"  SNF1: {np.mean(all_probabilities[:, 0]):.3f} ± {np.std(all_probabilities[:, 0]):.3f}")
-    print(f"  SNF2: {np.mean(all_probabilities[:, 1]):.3f} ± {np.std(all_probabilities[:, 1]):.3f}")
-    print(f"  SNF3: {np.mean(all_probabilities[:, 2]):.3f} ± {np.std(all_probabilities[:, 2]):.3f}")
+    print(f"  canonical: {np.mean(all_probabilities[:, 0]):.3f} ± {np.std(all_probabilities[:, 0]):.3f}")
+    print(f"  immune: {np.mean(all_probabilities[:, 1]):.3f} ± {np.std(all_probabilities[:, 1]):.3f}")
+    print(f"  stromal: {np.mean(all_probabilities[:, 2]):.3f} ± {np.std(all_probabilities[:, 2]):.3f}")
     
     # Summary
     print("\n" + "=" * 60)

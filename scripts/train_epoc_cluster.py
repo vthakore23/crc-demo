@@ -47,7 +47,7 @@ class EPOCDataset(Dataset):
         Args:
             manifest_csv: Path to CSV with columns:
                 - patient_id
-                - molecular_subtype (CMS1-4 or canonical-3)
+                - molecular_subtype (canonical, immune, stromal)
                 - clinical_data (optional)
             tile_dir: Directory containing patient subdirectories with tiles
             transform: Image transformations
@@ -60,9 +60,7 @@ class EPOCDataset(Dataset):
         
         # Map molecular subtypes to class indices
         self.subtype_map = {
-            'CMS1': 0, 'CMS2': 1, 'CMS3': 2, 'CMS4': 3,
-            'canonical': 0, 'immune': 1, 'stromal': 2,  # Alternative naming
-            'canonical': 0, 'immune': 1, 'stromal': 2, 'Mesenchymal': 3
+            'canonical': 0, 'immune': 1, 'stromal': 2
         }
         
         # Build tile index
